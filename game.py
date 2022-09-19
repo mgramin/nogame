@@ -95,7 +95,7 @@ if __name__=='__main__':
 
 
     clock = pygame.time.Clock()
-    map = generate_world()
+    map = generate_world(200, 200)
 
     camera_group = CameraGroup(map, tiles, textures)
 

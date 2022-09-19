@@ -108,8 +108,8 @@ def generate_coasts(func):
 @generate_coasts
 @generate_flowers
 @generate_earth_and_water
-def generate_world():
-    height_map = DiamondSquare.diamond_square(shape=(200, 200), min_height=0, max_height=10, roughness=0.2)
+def generate_world(length, width):
+    height_map = DiamondSquare.diamond_square(shape=(length, width), min_height=0, max_height=10, roughness=0.2)
     new_map = []
     for i in range(len(height_map)):
         new_map.append([])
