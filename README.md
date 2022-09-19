@@ -15,3 +15,22 @@ Thanks a ton [Ivan Voirol](https://opengameart.org/users/ivan-voirol), for amazi
 ![space](demo/demo1.png "Demo1")
 
 ![space](demo/demo2.png "Demo2")
+
+
+## Run from sources
+
+Init and activate virtual env (optional):
+```
+virtualenv .venv
+source .venv/bin/activate
+```
+
+Install dependencies:
+```
+pip3 install -r requirements.txt
+```
+
+Run:
+```
+python game.py
+```
