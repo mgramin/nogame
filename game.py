@@ -3,7 +3,7 @@ import sys, math
 
 from tiles import load_tile_table
 
-from world_generator import generate_world
+from world_generator import create_world
 from world_generator import textures
 
 
@@ -81,8 +81,9 @@ class CameraGroup(pygame.sprite.Group):
                 if i < len(self.map) and i>0:
                     if j < len(self.map[i]) and j>0:
                         texture = self.map[i][j].texture
-                        scaled_tile = pygame.transform.scale(tiles[texture.x][texture.y], (tile_size, tile_size))
-                        screen.blit(scaled_tile, (tile_size*(i-offset_x), tile_size*(j-offset_y)))
+                        for t in texture:
+                            scaled_tile = pygame.transform.scale(tiles[t.x][t.y], (tile_size, tile_size))
+                            screen.blit(scaled_tile, (tile_size*(i-offset_x), tile_size*(j-offset_y)))
 
 
 
@@ -92,14 +93,10 @@ if __name__=='__main__':
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     tiles = load_tile_table("world_textures.png", 32, 32)
 
-
-
     clock = pygame.time.Clock()
-    map = generate_world(200, 200)
+    map = create_world(50, 50)
 
     camera_group = CameraGroup(map, tiles, textures)
-
-    pygame.display.flip()
 
     while True:
         for event in pygame.event.get():
@@ -115,6 +112,7 @@ if __name__=='__main__':
 
         camera_group.update()
         camera_group.custom_draw()
+        pygame.display.flip()
 
         pygame.display.update()
         clock.tick(60)

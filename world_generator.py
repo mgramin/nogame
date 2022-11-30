@@ -26,6 +26,9 @@ textures = {
     "grass_right_border":           Texture(2,2, 'earth'),
     "grass_right_bottom_corner":    Texture(2,3, 'earth'),
     "grass_with_flowers":           Texture(1,6, 'earth'),
+
+    "flowers_yellow_1":             Texture(14,11, 'earth'),
+
     "water":                        Texture(19,4, 'water'),
     "water_top_border":             Texture(17,16, 'water')
 }
@@ -48,7 +51,7 @@ class Tile():
         # self.bottom_left = ""
 
 
-def generate_earth_and_water(func):
+def create_earth_and_water(func):
 
     def inner(*args, **kwargs):
         origin = func(*args, **kwargs)
@@ -56,59 +59,58 @@ def generate_earth_and_water(func):
             for j in range(len(origin[i])):
                 tile = origin[i][j]
                 if origin[i][j].height > 4:
-                    tile.texture = textures['grass']
+                    tile.texture = [textures['grass']]
                 else:
-                    tile.texture = textures['water']
+                    tile.texture = [textures['water']]
         return origin
                 
     return inner
 
 
-def generate_flowers(func):
+def create_flowers(func):
     def inner(*args, **kwargs):
         origin = func(*args, **kwargs)
 
         for i in range(len(origin)):
             for j in range(len(origin[i])):
-                if origin[i][j].texture.type == 'earth':
+                if origin[i][j].texture[0].type == 'earth':
                     v = bool(random.getrandbits(1))
                     if v == True:
-                        origin[i][j].texture = textures['grass_with_flowers']
+                        origin[i][j].texture.append(textures['flowers_yellow_1'])
         return origin
                 
     return inner
 
 
 
-def generate_coasts(func):
+def create_coasts(func):
 
     def inner(*args, **kwargs):
         origin = func(*args, **kwargs)
 
         for i in range(len(origin)):
             for j in range(len(origin[i])):
-                if origin[i][j].texture.type == "water" and origin[i][j-1].texture.type == 'earth':
-                    origin[i][j].texture = textures["water_top_border"]
-
+                if origin[i][j].texture[0].type == "water" and origin[i][j-1].texture[0].type == 'earth':
+                    origin[i][j].texture.append(textures["water_top_border"])
                 
-                if origin[i][j].texture.type == "earth" and origin[i-1][j].texture.type == "water":
-                    origin[i][j].texture = textures["grass_left_border"]
+                if origin[i][j].texture[0].type == "earth" and origin[i-1][j].texture[0].type == "water":
+                    origin[i][j].texture.append(textures["grass_left_border"])
 
-                if origin[i][j].texture.type == "earth" and i+1<len(origin) and origin[i+1][j].texture.type == "water":
-                    origin[i][j].texture = textures["grass_right_border"]
+                if origin[i][j].texture[0].type == "earth" and i+1<len(origin) and origin[i+1][j].texture[0].type == "water":
+                    origin[i][j].texture.append(textures["grass_right_border"])
 
-                if origin[i][j].texture.type == "earth" and origin[i][j-1].texture.type == "water":
-                    origin[i][j].texture = textures["grass_top_border"]
+                if origin[i][j].texture[0].type == "earth" and origin[i][j-1].texture[0].type == "water":
+                    origin[i][j].texture.append(textures["grass_top_border"])
 
         return origin
 
     return inner
 
 
-@generate_coasts
-@generate_flowers
-@generate_earth_and_water
-def generate_world(length, width):
+@create_coasts
+@create_flowers
+@create_earth_and_water
+def create_world(length, width):
     height_map = DiamondSquare.diamond_square(shape=(length, width), min_height=0, max_height=10, roughness=0.2)
     new_map = []
     for i in range(len(height_map)):
